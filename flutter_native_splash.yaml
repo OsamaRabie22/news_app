@@ -1,0 +1,26 @@
+flutter_native_splash:
+
+  color: "#FFFFFF"
+  image: assets/images/news_logo_dark.png
+  branding: assets/images/news_branding_dark.png
+  color_dark: "#171717"                        # AppColors.backgroundDark
+  image_dark: assets/images/news_logo.png  # الصورة الفاتحة على الأسود
+  branding_dark: assets/images/news_branding.png
+  android: true
+  ios: true
+  web: false
+  android_gravity: center
+  ios_content_mode: center
+  # تثبيت الـ splash لحد ما الأبلكيشن يكون جاهز فعلاً
+  android_screen_orientation: portrait
+
+  # ── Android 12+ (Animated Splash) ─────────────────────────────
+  android_12:
+    color: "#FFFFFF"
+    color_dark: "#171717"
+    image: assets/images/news_logo_dark.png
+    branding: assets/images/news_branding_dark.png
+    image_dark: assets/images/news_logo.png  # الصورة الفاتحة على الأسود
+    branding_dark: assets/images/news_branding.png
+
+  fullscreen: true                # default false
