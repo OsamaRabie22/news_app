@@ -7,7 +7,6 @@ import 'package:news/widget/main_loding_widget.dart';
 import 'package:news/widget/news_widget.dart';
 
 class CategoryDetails extends StatefulWidget {
-
   CategoryDetails({super.key});
 
   @override
@@ -55,21 +54,11 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                 child: TabBar(
                   onTap: (value) {
                     selectedIndex = value;
-                    setState(() {
-
-                    });
+                    setState(() {});
                   },
-                  indicatorColor: Theme
-                      .of(context)
-                      .splashColor,
-                  labelStyle: Theme
-                      .of(context)
-                      .textTheme
-                      .bodySmall,
-                  unselectedLabelStyle: Theme
-                      .of(context)
-                      .textTheme
-                      .labelMedium,
+                  indicatorColor: Theme.of(context).splashColor,
+                  labelStyle: Theme.of(context).textTheme.bodySmall,
+                  unselectedLabelStyle: Theme.of(context).textTheme.labelMedium,
                   dividerColor: AppColors.transparentColor,
                   tabAlignment: TabAlignment.start,
                   isScrollable: true,
@@ -78,7 +67,11 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                       .toList(),
                 ),
               ),
-              Expanded(child: NewsWidget(sourceId: sourcesList[selectedIndex].id ?? ''))
+              Expanded(
+                child: NewsWidget(
+                  sourceId: sourcesList[selectedIndex].id ?? '',
+                ),
+              ),
             ],
           );
         }

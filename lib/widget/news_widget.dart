@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news/api/api_manager.dart';
 import 'package:news/widget/main_error_widget.dart';
 import 'package:news/widget/main_loding_widget.dart';
+import 'package:news/widget/news_item.dart';
 
 class NewsWidget extends StatelessWidget {
   String sourceId;
@@ -32,15 +33,13 @@ class NewsWidget extends StatelessWidget {
               ),
             );
           }
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              return Text(
-                articles[index].title ?? '',
-                style: Theme.of(context).textTheme.labelLarge,
-              );
-            },
-            itemCount: articles.length,
-          );
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                return NewsItem(news: articles[index],);
+              },
+              itemCount: articles.length,
+            );
+
         }
       },
     );
