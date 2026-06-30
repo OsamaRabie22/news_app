@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news/screens/home_screen.dart';
 import 'package:news/utils/app_theme.dart';
 
+
 void main() {
   runApp(const MyApp());
 }

@@ -7,6 +7,7 @@ import 'package:news/widget/main_loding_widget.dart';
 import 'package:news/widget/news_widget.dart';
 
 class CategoryDetails extends StatefulWidget {
+  static const String routeName ='CategoryDetails';
   CategoryDetails({super.key});
 
   @override

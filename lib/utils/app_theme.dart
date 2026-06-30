@@ -23,6 +23,7 @@ class AppTheme {
       bodyMedium: AppStyles.bold20Black,
       bodyLarge: AppStyles.bold20White,
       bodySmall: AppStyles.bold16Black,
+      displayLarge: AppStyles.bold20White,
     ),
   );
 
@@ -46,6 +47,7 @@ class AppTheme {
       bodyMedium: AppStyles.bold20Black,
       bodyLarge: AppStyles.bold20White,
       bodySmall: AppStyles.bold16White,
+      displayLarge: AppStyles.bold20Black,
     ),
   );
 }

@@ -18,7 +18,7 @@ class NewsWidget extends StatelessWidget {
           return MainLodingWidget();
         } else if (snapshot.hasError) {
           return MainErrorWidget(
-            errorMessage: "errorMessage",
+              errorMessage: snapshot.error.toString(),
             onPressed: () {
               ApiManager.getNewsById(sourceId);
             },

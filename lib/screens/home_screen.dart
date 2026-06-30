@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news/screens/category/category_details.dart';
+import 'package:news/screens/home/category_fragment.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = "HomeScreen";
@@ -12,7 +13,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Home", style: Theme.of(context).textTheme.headlineLarge),
       ),
-      body: CategoryDetails(),
+      body: CategoryFragment(),
     );
   }
 }
