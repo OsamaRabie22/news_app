@@ -1,82 +1,105 @@
 import 'package:flutter/material.dart';
-import 'package:news/api/api_manager.dart';
-import 'package:news/models/source_response.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news/cubits/news/news_cubit.dart';
+import 'package:news/cubits/sources/sources_cubit.dart';
+import 'package:news/cubits/sources/sources_state.dart';
 import 'package:news/utils/app_colors.dart';
 import 'package:news/widget/main_error_widget.dart';
-import 'package:news/widget/main_loding_widget.dart';
+import 'package:news/widget/main_loading_widget.dart';
 import 'package:news/widget/news_widget.dart';
 
-class CategoryDetails extends StatefulWidget {
-  static const String routeName ='CategoryDetails';
-  CategoryDetails({super.key});
-
-  @override
-  State<CategoryDetails> createState() => _CategoryDetailsState();
-}
-
-class _CategoryDetailsState extends State<CategoryDetails> {
-  int selectedIndex = 0;
+class CategoryDetails extends StatelessWidget {
+  static const String routeName = 'CategoryDetails';
+  final String
+  categoryId; //sports,general ✅ هنستقبل id بتاع الـ category المختارة
+  CategoryDetails({super.key, required this.categoryId});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<SourceResponse>(
-      future: ApiManager.getSources(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: MainLodingWidget());
-        } else if (snapshot.hasError) {
-          return Center(
-            child: MainErrorWidget(
-              errorMessage: 'Something went wrong',
-              onPressed: () {
-                ApiManager.getSources();
-                setState(() {});
-              },
-            ),
-          );
-        }
-        if (snapshot.data?.status != 'ok') {
-          return Center(
-            child: MainErrorWidget(
-              errorMessage: snapshot.data!.message!,
-              onPressed: () {
-                ApiManager.getSources();
-                setState(() {});
-              },
-            ),
-          );
-        } else {
-          var sourcesList = snapshot.data?.sources ?? [];
-          return Column(
-            children: [
-              DefaultTabController(
-                length: sourcesList.length,
-                initialIndex: selectedIndex,
-                child: TabBar(
-                  onTap: (value) {
-                    selectedIndex = value;
-                    setState(() {});
-                  },
-                  indicatorColor: Theme.of(context).splashColor,
-                  labelStyle: Theme.of(context).textTheme.bodySmall,
-                  unselectedLabelStyle: Theme.of(context).textTheme.labelMedium,
-                  dividerColor: AppColors.transparentColor,
-                  tabAlignment: TabAlignment.start,
-                  isScrollable: true,
-                  tabs: sourcesList
-                      .map((e) => Tab(child: Text(e.name ?? '')))
-                      .toList(),
-                ),
+    // return FutureBuilder<SourceResponse>(
+    //   future: ApiManager.getSources(),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return Center(child: MainLodingWidget());
+    //     } else if (snapshot.hasError) {
+    //       return Center(
+    //         child: MainErrorWidget(
+    //           errorMessage: 'Something went wrong',
+    //           onPressed: () {
+    //             ApiManager.getSources();
+    //             setState(() {});
+    //           },
+    //         ),
+    //       );
+    //     }
+    //     if (snapshot.data?.status != 'ok') {
+    //       return Center(
+    //         child: MainErrorWidget(
+    //           errorMessage: snapshot.data!.message!,
+    //           onPressed: () {
+    //             ApiManager.getSources(widget.);
+    //             setState(() {});
+    //           },
+    //         ),
+    //       );
+    //     } else {
+    //       var sourcesList = snapshot.data?.sources ?? [];
+    return BlocProvider<SourcesCubit>(
+      create: (context) => SourcesCubit()..getSources(categoryId),
+      child: BlocBuilder<SourcesCubit, SourcesState>(
+        builder: (context, state) {
+          if (state is SourcesLoading) {
+            return Center(child: MainLoadingWidget());
+          } else if (state is SourcesError) {
+            return Center(
+              child: MainErrorWidget(
+                errorMessage: state.message,
+                onPressed: () {
+                  context.read<SourcesCubit>().getSources(categoryId);
+                },
               ),
-              Expanded(
-                child: NewsWidget(
-                  sourceId: sourcesList[selectedIndex].id ?? '',
+            );
+          } else if (state is SourcesSuccess) {
+            var cubit = context.read<SourcesCubit>();
+            return Column(
+              children: [
+                DefaultTabController(
+                  length: state.sources.length,
+                  initialIndex: cubit.selectedIndex,
+                  child: TabBar(
+                    onTap: (value) {
+                      cubit.changeSource(value);
+                    },
+                    indicatorColor: Theme.of(context).splashColor,
+                    labelStyle: Theme.of(context).textTheme.bodySmall,
+                    unselectedLabelStyle: Theme.of(
+                      context,
+                    ).textTheme.labelMedium,
+                    dividerColor: AppColors.transparentColor,
+                    tabAlignment: TabAlignment.start,
+                    isScrollable: true,
+                    tabs: state.sources
+                        .map((e) => Tab(child: Text(e.name ?? '')))
+                        .toList(),
+                  ),
                 ),
-              ),
-            ],
-          );
-        }
-      },
+                Expanded(
+                  child: BlocProvider(
+                    key: ValueKey(cubit.selectedIndex),
+                    create: (context) => NewsCubit()
+                      ..getNews(state.sources[cubit.selectedIndex].id ?? ''),
+                    child: NewsWidget(
+                      sourceId: state.sources[cubit.selectedIndex].id ?? '',
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return const SizedBox();
+          }
+        },
+      ),
     );
   }
 }

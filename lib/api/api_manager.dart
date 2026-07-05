@@ -5,12 +5,12 @@ import 'package:news/api/api_constants.dart';
 import 'package:news/api/end_points.dart';
 import 'package:news/models/news_response.dart';
 import 'package:news/models/source_response.dart';
-import 'package:news/screens/category/category_details.dart';
 
 class ApiManager {
-  static Future<SourceResponse> getSources() async {
+  static Future<SourceResponse> getSources(String category) async {
     Uri url = Uri.https(ApiConstants.baseUrl, EndPoints.sourceApi, {
       'apiKey': ApiConstants.apiKey,
+      'category': category,
     });
     try {
       var response = await http.get(url);

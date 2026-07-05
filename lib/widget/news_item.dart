@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:news/models/news_response.dart';
 import 'package:news/utils/app_colors.dart';
-import 'package:news/widget/main_loding_widget.dart';
+import 'package:news/widget/main_loading_widget.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class NewsItem extends StatelessWidget {
@@ -38,7 +38,7 @@ class NewsItem extends StatelessWidget {
                         fit: BoxFit.cover,
                         placeholder: (context, url) => SizedBox(
                           height: 220,
-                          child: Center(child: MainLodingWidget()),
+                          child: Center(child: MainLoadingWidget()),
                         ),
                         errorWidget: (context, url, error) => Container(
                           height: 220,

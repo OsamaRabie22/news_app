@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news/cubits/theme/theme_cubit.dart';
+import 'package:news/cubits/theme/theme_state.dart';
 import 'package:news/screens/home_screen.dart';
 import 'package:news/utils/app_theme.dart';
 
@@ -12,13 +15,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark,
-      initialRoute: HomeScreen.routeName,
-      routes: {HomeScreen.routeName: (_) => HomeScreen()},
+    return BlocProvider<ThemeCubit>(
+      create: (context)=>ThemeCubit(),
+      child: BlocBuilder<ThemeCubit,ThemeState>(
+        builder: (context,state){
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: state.themeMode,
+            initialRoute: HomeScreen.routeName,
+            routes: {HomeScreen.routeName: (_) => HomeScreen()},
+          );
+        },
+      )
     );
   }
 }

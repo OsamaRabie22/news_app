@@ -1,46 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:news/api/api_manager.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news/cubits/news/news_cubit.dart';
+import 'package:news/cubits/news/news_state.dart';
 import 'package:news/widget/main_error_widget.dart';
-import 'package:news/widget/main_loding_widget.dart';
+import 'package:news/widget/main_loading_widget.dart';
 import 'package:news/widget/news_item.dart';
 
 class NewsWidget extends StatelessWidget {
-  String sourceId;
+  final String sourceId;
 
-  NewsWidget({super.key, required this.sourceId});
+  const NewsWidget({super.key, required this.sourceId});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: ApiManager.getNewsById(sourceId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return MainLodingWidget();
-        } else if (snapshot.hasError) {
+    return BlocBuilder<NewsCubit, NewsState>(
+      builder: (context, state) {
+        if (state is NewsLoading) {
+          return MainLoadingWidget();
+        } else if (state is NewsError) {
           return MainErrorWidget(
-              errorMessage: snapshot.error.toString(),
+            errorMessage: state.message,
             onPressed: () {
-              ApiManager.getNewsById(sourceId);
+              context.read<NewsCubit>().getNews(sourceId);
             },
           );
-        } else {
-          var articles = snapshot.data?.articles ?? [];
-          if (articles.isEmpty) {
+        } else if (state is NewsSuccess) {
+          if (state.articles.isEmpty) {
             return Center(
               child: Text(
-                'no data',
+                'No data',
                 style: Theme.of(context).textTheme.labelLarge,
               ),
             );
           }
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return NewsItem(news: articles[index],);
-              },
-              itemCount: articles.length,
-            );
-
+          return ListView.builder(
+            itemBuilder: (context, index) =>
+                NewsItem(news: state.articles[index]),
+            itemCount: state.articles.length,
+          );
         }
+        return const SizedBox();
       },
     );
   }
